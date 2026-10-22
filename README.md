@@ -33,8 +33,6 @@ Transform lengthy meeting transcripts into structured, actionable meeting minute
 
 ✅ Simple and lightweight web interface
 
-✅ REST API for integration with other applications
-
 ---
 
 ## 🛠️ Built With
@@ -42,8 +40,6 @@ Transform lengthy meeting transcripts into structured, actionable meeting minute
 - **Node.js**
 - **Express.js**
 - **Google Gemini API**
-- **Mammoth**
-- **Multer**
 - **Dotenv**
 
 ---
