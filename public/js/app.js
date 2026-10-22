@@ -164,6 +164,8 @@ clearBtn.addEventListener("click", () => {
   out.className = "";
   out.textContent = "";
   lastMinutes = null;
+  accessInput.value = "";
+  localStorage.removeItem("accessCode");
 });
 
 goBtn.addEventListener("click", async () => {
