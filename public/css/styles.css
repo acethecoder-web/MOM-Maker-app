@@ -95,7 +95,7 @@ header p {
   font-size: 0.92rem;
 }
 
-
+/* File drop area */
 .drop {
   position: relative;
   display: flex;
@@ -189,7 +189,7 @@ textarea:focus {
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-
+/* Buttons */
 .actions {
   margin-top: 1.5rem;
   display: flex;
@@ -268,6 +268,7 @@ button:focus-visible {
   }
 }
 
+/* Result */
 .result {
   margin-top: 1.5rem;
   display: none;
@@ -307,7 +308,7 @@ button:focus-visible {
   padding: 1rem 1.25rem;
 }
 
-
+/* Formatted minutes */
 .minutes {
   background: var(--bg);
   border: 1px solid var(--line);

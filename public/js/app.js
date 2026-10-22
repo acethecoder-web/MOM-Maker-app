@@ -10,6 +10,8 @@ const out = document.getElementById("output");
 
 let lastMinutes = null;
 
+/* ---------- Helpers ---------- */
+
 function el(tag, text, className) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
@@ -24,6 +26,7 @@ function show(text, isError) {
   out.textContent = text;
 }
 
+/* ---------- File input ---------- */
 
 function showFile() {
   const f = fileInput.files[0];
@@ -51,6 +54,7 @@ fileInput.addEventListener("change", showFile);
   drop.addEventListener(ev, () => drop.classList.remove("is-over")),
 );
 
+/* ---------- Rendering ---------- */
 
 function listSection(title, items) {
   const wrap = el("div");
@@ -140,6 +144,7 @@ function toPlainText(d) {
   ].join("\n\n");
 }
 
+/* ---------- Buttons ---------- */
 
 document.getElementById("copy").addEventListener("click", async (e) => {
   if (!lastMinutes) return;
