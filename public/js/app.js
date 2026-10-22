@@ -7,10 +7,12 @@ const goLabel = document.getElementById("go-label");
 const clearBtn = document.getElementById("clear");
 const result = document.getElementById("result");
 const out = document.getElementById("output");
+const accessInput = document.getElementById("access-code");
+
+accessInput.value = localStorage.getItem("accessCode") || "";
 
 let lastMinutes = null;
 
-/* ---------- Helpers ---------- */
 
 function el(tag, text, className) {
   const node = document.createElement(tag);
@@ -26,7 +28,6 @@ function show(text, isError) {
   out.textContent = text;
 }
 
-/* ---------- File input ---------- */
 
 function showFile() {
   const f = fileInput.files[0];
@@ -54,7 +55,6 @@ fileInput.addEventListener("change", showFile);
   drop.addEventListener(ev, () => drop.classList.remove("is-over")),
 );
 
-/* ---------- Rendering ---------- */
 
 function listSection(title, items) {
   const wrap = el("div");
@@ -144,7 +144,6 @@ function toPlainText(d) {
   ].join("\n\n");
 }
 
-/* ---------- Buttons ---------- */
 
 document.getElementById("copy").addEventListener("click", async (e) => {
   if (!lastMinutes) return;
@@ -176,6 +175,13 @@ goBtn.addEventListener("click", async () => {
     return;
   }
 
+  const accessCode = accessInput.value.trim();
+if (!accessCode) {
+  show("Enter your access code first.", true);
+  return;
+}
+localStorage.setItem("accessCode", accessCode);
+
   goBtn.disabled = true;
   clearBtn.disabled = true;
   goBtn.classList.add("loading");
@@ -184,17 +190,21 @@ goBtn.addEventListener("click", async () => {
 
   try {
     let res;
-    if (file) {
-      const form = new FormData();
-      form.append("file", file);
-      res = await fetch("/minutes-file", { method: "POST", body: form });
-    } else {
-      res = await fetch("/minutes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript }),
-      });
-    }
+   if (file) {
+  const form = new FormData();
+  form.append("file", file);
+  res = await fetch("/minutes-file", {
+    method: "POST",
+    headers: { "x-access-code": accessCode },
+    body: form,
+  });
+} else {
+  res = await fetch("/minutes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-access-code": accessCode },
+    body: JSON.stringify({ transcript }),
+  });
+}
 
     const data = await res.json();
     if (!res.ok) {
