@@ -165,7 +165,7 @@ header p {
   height: 1px;
   background: var(--line);
 }
-
+/*
 textarea {
   width: 100%;
   min-height: 150px;
@@ -188,7 +188,7 @@ textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
-
+*/
 /* Buttons */
 .actions {
   margin-top: 1.5rem;
@@ -361,6 +361,31 @@ button:focus-visible {
 .minutes tr:last-child td {
   border-bottom: 0;
 }
+
+textarea,
+input[type="password"] {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+textarea:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   * {
