@@ -40,8 +40,6 @@ Transform lengthy meeting transcripts into structured, actionable meeting minute
 - **Node.js**
 - **Express.js**
 - **Google Gemini API**
-- **Mammoth**
-- **Multer**
 - **Dotenv**
 
 ---
