@@ -1,6 +1,7 @@
 import { generateMinutes } from "../services/gemini.service.js";
 import { extractTextFromDocx } from "../services/docx.service.js";
 import { MAX_TRANSCRIPT_CHARS } from "../config/limits.js";
+import { buildMinutesDocx, normalizeMinutes } from "../services/minutesDocx.service.js";
 
 export async function minutesFromText(req, res) {
   try {
@@ -44,5 +45,27 @@ export async function minutesFromFile(req, res) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to process file" });
+  }
+}
+
+export async function exportMinutesDocx(req, res) {
+  try {
+    const raw = req.body?.minutes;
+    if (!raw || typeof raw !== "object") {
+      return res.status(400).json({ error: "minutes is required" });
+    }
+
+    const buffer = await buildMinutesDocx(normalizeMinutes(raw));
+    const date = new Date().toISOString().slice(0, 10);
+
+    res.set({
+      "Content-Type":
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "Content-Disposition": `attachment; filename="meeting-minutes-${date}.docx"`,
+    });
+    res.send(buffer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to create the document" });
   }
 }

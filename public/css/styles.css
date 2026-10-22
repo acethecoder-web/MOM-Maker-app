@@ -214,7 +214,7 @@ button:focus-visible {
   outline-offset: 3px;
 }
 
-#go {
+#go,#download {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
@@ -223,7 +223,7 @@ button:focus-visible {
   padding: 0.8rem 1.4rem;
   font-size: 1rem;
 }
-#go:hover {
+#go:hover,#download:hover {
   filter: brightness(1.08);
 }
 #go:active {
@@ -268,7 +268,6 @@ button:focus-visible {
   }
 }
 
-/* Result */
 .result {
   margin-top: 1.5rem;
   display: none;
@@ -298,6 +297,7 @@ button:focus-visible {
 #copy:hover {
   background: var(--accent-soft);
 }
+
 #output.status {
   color: var(--muted);
 }
@@ -385,7 +385,13 @@ input[type="password"]:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
-
+#download[hidden] {
+  display: none;
+}
+#download:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
 
 @media (prefers-reduced-motion: reduce) {
   * {

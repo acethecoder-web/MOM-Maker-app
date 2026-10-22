@@ -23,6 +23,7 @@ function el(tag, text, className) {
 
 function show(text, isError) {
   lastMinutes = null;
+  downloadBtn.hidden = true;
   result.classList.add("show");
   out.className = isError ? "error" : "status";
   out.textContent = text;
@@ -106,6 +107,7 @@ function actionTable(items) {
 
 function renderMinutes(data) {
   lastMinutes = data;
+   downloadBtn.hidden = false;
   result.classList.add("show");
   out.className = "";
   out.textContent = "";
@@ -156,6 +158,59 @@ document.getElementById("copy").addEventListener("click", async (e) => {
   }
 });
 
+const downloadBtn = document.getElementById("download");
+
+function flashButton(btn, text, original) {
+  btn.textContent = text;
+  setTimeout(() => (btn.textContent = original), 2000);
+}
+
+downloadBtn.addEventListener("click", async () => {
+  if (!lastMinutes) return;
+
+  const accessCode = accessInput.value.trim();
+  if (!accessCode) {
+    flashButton(downloadBtn, "Enter access code", "Download .docx");
+    return;
+  }
+
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = "Preparing...";
+
+  try {
+    const res = await fetch("/minutes/export", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-code": accessCode,
+      },
+      body: JSON.stringify({ minutes: lastMinutes }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      flashButton(downloadBtn, data.error || "Download failed", "Download .docx");
+      return;
+    }
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `meeting-minutes-${new Date().toISOString().slice(0, 10)}.docx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    downloadBtn.textContent = "Download .docx";
+  } catch {
+    flashButton(downloadBtn, "Download failed", "Download .docx");
+  } finally {
+    downloadBtn.disabled = false;
+  }
+});
+
 clearBtn.addEventListener("click", () => {
   fileInput.value = "";
   document.getElementById("transcript").value = "";
@@ -166,6 +221,7 @@ clearBtn.addEventListener("click", () => {
   lastMinutes = null;
   accessInput.value = "";
   localStorage.removeItem("accessCode");
+  downloadBtn.hidden = true;
 });
 
 goBtn.addEventListener("click", async () => {
