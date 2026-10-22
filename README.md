@@ -33,8 +33,6 @@ Transform lengthy meeting transcripts into structured, actionable meeting minute
 
 ✅ Simple and lightweight web interface
 
-✅ REST API for integration with other applications
-
 ---
 
 ## 🛠️ Built With
