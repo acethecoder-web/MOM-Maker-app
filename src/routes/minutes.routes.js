@@ -6,7 +6,7 @@ import { requireAccessCode } from "../middleware/accessCode.js";
 
 const router = Router();
 
-router.post("/minutes",minutesLimiter,minutesFromText,requireAccessCode);
+router.post("/minutes", minutesLimiter, requireAccessCode, minutesFromText);
 router.post("/minutes-file", minutesLimiter, requireAccessCode, upload.single("file"), minutesFromFile);
 
 export default router;
