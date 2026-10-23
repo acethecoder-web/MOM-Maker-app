@@ -15,7 +15,10 @@ app.use(minutesRoutes);
 
 app.use((err, req, res, next) => {
   if (err.code === "LIMIT_FILE_SIZE") {
-    return res.status(413).json({ error: "File is too large (5 MB max)" });
+    return res.status(413).json({ error: "File is too large" });
+  }
+  if (err.code === "UNSUPPORTED_AUDIO") {
+    return res.status(400).json({ error: "Unsupported audio format" });
   }
   console.error(err);
   res.status(500).json({ error: "Something went wrong" });

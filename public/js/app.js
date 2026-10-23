@@ -10,7 +10,8 @@ const out = document.getElementById("output");
 const accessInput = document.getElementById("access-code");
 const transcriptInput = document.getElementById("transcript");
 const downloadBtn = document.getElementById("download");
-
+const MAX_AUDIO_BYTES = 50 * 1024 * 1024;
+const consentBox = document.getElementById("consent");
 
 accessInput.value = localStorage.getItem("accessCode") || "";
 
@@ -41,8 +42,8 @@ function showFile() {
       (f.size / 1024).toFixed(0) + " KB. Select again to replace.";
     drop.classList.add("has-file");
   } else {
-    fileName.textContent = "Choose a file or drop it here";
-    fileMeta.textContent = "Word documents only (.docx)";
+    fileName.textContent = "Word documents only (.docx) or audio files (30 MB max";
+    fileMeta.textContent = "Word documents only (.docx) or audio files (30 MB max)";
     drop.classList.remove("has-file");
   }
     updateClearVisibility();
@@ -135,6 +136,12 @@ function renderMinutes(data) {
   box.appendChild(listSection("Decisions", data.decisions));
   box.appendChild(actionTable(data.action_items));
 
+if (data.transcript) {
+  const details = el("details", undefined, "transcript");
+  details.appendChild(el("summary", "Transcript (check it for errors)"));
+  details.appendChild(el("p", data.transcript));
+  box.appendChild(details);
+}
   out.appendChild(box);
 }
 
@@ -234,46 +241,64 @@ clearBtn.addEventListener("click", () => {
   localStorage.removeItem("accessCode");
   downloadBtn.hidden = true;
 });
-
 goBtn.addEventListener("click", async () => {
   const file = fileInput.files[0];
-  const transcript = document.getElementById("transcript").value.trim();
+  const transcript = transcriptInput.value.trim();
 
   if (!file && !transcript) {
-    show("Add a .docx file or paste a transcript first.", true);
+    show("Add a .docx or audio file, or paste a transcript first.", true);
     return;
   }
 
   const accessCode = accessInput.value.trim();
-if (!accessCode) {
-  show("Enter your access code first.", true);
-  return;
-}
-localStorage.setItem("accessCode", accessCode);
+  if (!accessCode) {
+    show("Enter your access code first.", true);
+    return;
+  }
+  localStorage.setItem("accessCode", accessCode);
+
+  if (!consentBox.checked) {
+    show("Confirm that you have the right to upload this content.", true);
+    return;
+  }
+
+  // Anything that isn't a .docx is treated as audio
+  const isAudio = !!file && !file.name.toLowerCase().endsWith(".docx");
+  if (isAudio && file.size > MAX_AUDIO_BYTES) {
+    show("Audio file is too large (30 MB max).", true);
+    return;
+  }
 
   goBtn.disabled = true;
   clearBtn.disabled = true;
   goBtn.classList.add("loading");
   goLabel.textContent = "Generating";
-  show("Generating...");
+  show(
+    isAudio
+      ? "Transcribing and generating. This can take a minute..."
+      : "Generating...",
+  );
 
   try {
     let res;
-   if (file) {
-  const form = new FormData();
-  form.append("file", file);
-  res = await fetch("/minutes-file", {
-    method: "POST",
-    headers: { "x-access-code": accessCode },
-    body: form,
-  });
-} else {
-  res = await fetch("/minutes", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "x-access-code": accessCode },
-    body: JSON.stringify({ transcript }),
-  });
-}
+    if (file) {
+      const form = new FormData();
+      form.append("file", file);
+      res = await fetch(isAudio ? "/minutes-audio" : "/minutes-file", {
+        method: "POST",
+        headers: { "x-access-code": accessCode },
+        body: form,
+      });
+    } else {
+      res = await fetch("/minutes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-code": accessCode,
+        },
+        body: JSON.stringify({ transcript }),
+      });
+    }
 
     const data = await res.json();
     if (!res.ok) {

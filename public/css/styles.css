@@ -397,6 +397,34 @@ input[type="password"]:focus {
   display: none;
 }
 
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+.consent input {
+  margin-top: 0.25rem;
+}
+
+.transcript {
+  margin-top: 1.2rem;
+}
+.transcript summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.transcript p {
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  color: var(--muted);
+}
+
+
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;

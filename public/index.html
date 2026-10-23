@@ -24,9 +24,9 @@
 
       <section class="panel">
         <div class="field">
-          <span class="field-label">Upload a .docx file</span>
+          <span class="field-label">Upload a .docx or audio file</span>
           <label class="drop" id="drop">
-            <input type="file" id="file" accept=".docx" />
+            <input type="file" id="file" accept=".docx,.mp3,.wav,.aac,.ogg,.flac,.aiff,.m4a" />
             <span class="drop-icon" aria-hidden="true">
               <svg
                 width="22"
@@ -44,8 +44,8 @@
               </svg>
             </span>
             <span class="drop-text">
-              <strong id="file-name">Choose a file or drop it here</strong>
-              <span id="file-meta">Word documents only (.docx)</span>
+              <strong id="file-name">Choose a file</strong>
+              <span id="file-meta">Word (.docx) or audio 30 MB max</span>
             </span>
           </label>
         </div>
@@ -66,7 +66,10 @@
   <label class="field-label" for="access-code">Access code (Testing Phase)</label>
   <input type="password" id="access-code" autocomplete="off" placeholder="Enter your access code" />
 </div>
-
+<label class="consent">
+  <input type="checkbox" id="consent" />
+  <span>I have the right to upload this content, and everyone in the recording or transcript has agreed.</span>
+</label>
         <div class="actions">
           <button id="go" type="button">
             <span class="spinner" aria-hidden="true"></span>
