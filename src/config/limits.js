@@ -1,4 +1,4 @@
-export const MAX_TRANSCRIPT_CHARS = 50000; // roughly 7-8k tokens
-export const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-export const RATE_LIMIT_MAX = 15; // requests per IP per window
-export const EXPORT_RATE_LIMIT_MAX = 60; // downloads per IP per window
+export const MAX_TRANSCRIPT_CHARS = 50000; 
+export const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; 
+export const RATE_LIMIT_MAX = 15; 
+export const EXPORT_RATE_LIMIT_MAX = 60; 

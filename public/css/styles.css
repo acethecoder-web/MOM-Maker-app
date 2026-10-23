@@ -393,6 +393,10 @@ input[type="password"]:focus {
   cursor: progress;
 }
 
+#clear[hidden] {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;

@@ -8,6 +8,9 @@ const clearBtn = document.getElementById("clear");
 const result = document.getElementById("result");
 const out = document.getElementById("output");
 const accessInput = document.getElementById("access-code");
+const transcriptInput = document.getElementById("transcript");
+const downloadBtn = document.getElementById("download");
+
 
 accessInput.value = localStorage.getItem("accessCode") || "";
 
@@ -42,7 +45,16 @@ function showFile() {
     fileMeta.textContent = "Word documents only (.docx)";
     drop.classList.remove("has-file");
   }
+    updateClearVisibility();
 }
+
+function updateClearVisibility() {
+  clearBtn.hidden = !(transcriptInput.value.trim() || fileInput.files.length || accessInput.value.trim() ) ;
+}
+
+transcriptInput.addEventListener("input", updateClearVisibility);
+accessInput.addEventListener("input", updateClearVisibility);
+updateClearVisibility(); // covers browsers that restore text on refresh
 
 fileInput.addEventListener("change", showFile);
 
@@ -158,7 +170,6 @@ document.getElementById("copy").addEventListener("click", async (e) => {
   }
 });
 
-const downloadBtn = document.getElementById("download");
 
 function flashButton(btn, text, original) {
   btn.textContent = text;
@@ -214,12 +225,12 @@ downloadBtn.addEventListener("click", async () => {
 clearBtn.addEventListener("click", () => {
   fileInput.value = "";
   document.getElementById("transcript").value = "";
-  showFile();
   result.classList.remove("show");
   out.className = "";
   out.textContent = "";
   lastMinutes = null;
   accessInput.value = "";
+    showFile();
   localStorage.removeItem("accessCode");
   downloadBtn.hidden = true;
 });
